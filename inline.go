@@ -93,7 +93,8 @@ type Results []Result
 
 // MarshalJSON makes sure IQRs have proper IDs and Type variables set.
 func (results Results) MarshalJSON() ([]byte, error) {
-	for _, result := range results {
+	for _, res := range results {
+		result := res
 		if result.ResultID() == "" {
 			result.SetResultID(fmt.Sprintf("%d", &result))
 		}
