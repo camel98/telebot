@@ -139,7 +139,7 @@ func (b *Bot) Restrict(chat *Chat, member *ChatMember) error {
 		"user_id":    member.User.Recipient(),
 		"until_date": strconv.FormatInt(until, 10),
 	}
-	embedRights(params, prv)
+	embedRestrictRights(params, prv)
 
 	_, err := b.Raw("restrictChatMember", params)
 	return err
@@ -288,4 +288,9 @@ func (b *Bot) SetDefaultRights(rights Rights, forChannels bool) error {
 func embedRights(p map[string]interface{}, rights Rights) {
 	data, _ := json.Marshal(rights)
 	_ = json.Unmarshal(data, &p)
+}
+
+func embedRestrictRights(p map[string]interface{}, rights Rights) {
+	data, _ := json.Marshal(rights)
+	p["permissions"] = string(data)
 }
