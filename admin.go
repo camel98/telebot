@@ -135,9 +135,10 @@ func (b *Bot) Restrict(chat *Chat, member *ChatMember) error {
 	prv, until := member.Rights, member.RestrictedUntil
 
 	params := map[string]interface{}{
-		"chat_id":    chat.Recipient(),
-		"user_id":    member.User.Recipient(),
-		"until_date": strconv.FormatInt(until, 10),
+		"chat_id":                          chat.Recipient(),
+		"user_id":                          member.User.Recipient(),
+		"until_date":                       strconv.FormatInt(until, 10),
+		"use_independent_chat_permissions": true,
 	}
 	embedRestrictRights(params, prv)
 
