@@ -37,7 +37,6 @@ type WebhookEndpoint struct {
 //
 // You can also leave the Listen field empty. In this case it is up to the caller to
 // add the Webhook to a http-mux.
-//
 type Webhook struct {
 	Listen         string   `json:"url"`
 	MaxConnections int      `json:"max_connections"`
@@ -144,7 +143,10 @@ func (h *Webhook) Poll(b *Bot, dest chan Update, stop chan struct{}) {
 	}(stop)
 
 	if h.TLS != nil {
-		s.ListenAndServeTLS(h.TLS.Cert, h.TLS.Key)
+		err := s.ListenAndServeTLS(h.TLS.Cert, h.TLS.Key)
+		if err != nil {
+			panic(err)
+		}
 	} else {
 		s.ListenAndServe()
 	}
