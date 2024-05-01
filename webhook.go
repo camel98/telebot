@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // A WebhookTLS specifies the path to a key and a cert so the poller can open
@@ -132,8 +133,13 @@ func (h *Webhook) Poll(b *Bot, dest chan Update, stop chan struct{}) {
 		return
 	}
 
+	split := strings.Split(h.Listen, ":")
+	if len(split) != 2 {
+		panic("err")
+	}
 	s := &http.Server{
-		Addr:    "0.0.0.0",
+
+		Addr:    "0.0.0.0:" + split[1],
 		Handler: h,
 	}
 
