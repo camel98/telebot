@@ -133,7 +133,7 @@ func (h *Webhook) Poll(b *Bot, dest chan Update, stop chan struct{}) {
 	}
 
 	s := &http.Server{
-		Addr:    h.Listen,
+		Addr:    "0.0.0.0",
 		Handler: h,
 	}
 
