@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"strconv"
 	"strings"
@@ -138,7 +139,6 @@ func (h *Webhook) Poll(b *Bot, dest chan Update, stop chan struct{}) {
 		panic("err")
 	}
 	s := &http.Server{
-
 		Addr:    "0.0.0.0:" + split[1],
 		Handler: h,
 	}
@@ -149,7 +149,15 @@ func (h *Webhook) Poll(b *Bot, dest chan Update, stop chan struct{}) {
 	}(stop)
 
 	if h.TLS != nil {
-		err := s.ListenAndServeTLS(h.TLS.Cert, h.TLS.Key)
+		ln, err := net.Listen("tcp4", s.Addr)
+		if err != nil {
+			panic(err)
+		}
+
+		defer ln.Close()
+
+		err = s.ServeTLS(ln, h.TLS.Cert, h.TLS.Key)
+
 		if err != nil {
 			panic(err)
 		}
